@@ -1,18 +1,19 @@
-# pip install matplotlib pytesseract opencv-python
-from flask import Flask, render_template, request, redirect, url_for
+# pip install matplotlib pytesseract opencv-python tesseract-ocr
+from flask import Flask, render_template, request, redirect, url_for, session
 import subprocess
 import matplotlib.pyplot as plt
 import pytesseract
 import cv2
 
 app = Flask(__name__)
-
+app.secret_key = 'your_secret_key'
 pytesseract.pytesseract.tesseract_cmd = r'/usr/bin/tesseract'
 
-@app.route('/', methods=['GET'])
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html')
-
+    result = session.get('result')
+    print(result)
+    return render_template('index.html', result=result)
 def process_image(img_path):
     def open_img(img_path):
         carplate_img = cv2.imread(img_path)
@@ -54,12 +55,14 @@ def save_photo():
     image_data = request.json.get('image')
 
     # Запускаем скрипт для обработки
-    processed_img, carplate_text = process_image(img_path='8402943.jpg')
+    processed_img, carplate_text = process_image(img_path='5.jpeg')
 
     result = f'Номер авто: {carplate_text}'
     print(result)
 
-    return redirect(url_for('index', result=result))
+    session['result'] = result
+
+    return redirect(url_for('index'))
 
 
 
