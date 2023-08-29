@@ -13,6 +13,7 @@
             crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <link rel="stylesheet" href="./static/style.css">
 
@@ -45,8 +46,7 @@
             {% endif %}
 
 
-            <h1>Открыть камеру</h1>
-            <button id="btnStart">Начать</button>
+            <button id="btnStart"><i class="fas fa-camera"></i></button>
             <br/>
             <video id="video" autoplay></video>
             <canvas id="canvas" style="display: none;"></canvas>
@@ -200,11 +200,13 @@
   success: function(response) {
     console.log('Фото успешно отправлено на сервер');
     // Закрываем окно камеры
-    video.srcObject.getTracks().forEach(function(track) {
-      track.stop();
-    });
-    cameraContainer.remove();
-  },
+        video.srcObject.getTracks().forEach(function(track) {
+          track.stop();
+        });
+        video.style.display = 'none';
+        canvas.style.display = 'none';
+        btnStart.disabled = true;
+      },
   error: function(xhr, status, error) {
     console.error('Ошибка при отправке фото:', error);
     console.log('Статус ошибки:', status);
@@ -360,6 +362,7 @@
                 let valueString = date.getFullYear().toString();
                 valueString = valueString.concat('-', twoDigits(date.getMonth()), '-', twoDigits(date.getDate()), 'T', twoDigits(date.getHours()), ':', twoDigits(date.getMinutes()));
                 document.querySelectorAll('input[type="datetime-local"].now').forEach((item) => item.value = valueString);
+
 
     </script>
 </body>
