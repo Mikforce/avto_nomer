@@ -26,6 +26,19 @@
     <div class="row  mt-4 mb-2">
         <h1 class="col mx-auto text-center h2">Приём/передача тягача.</h1>
     </div>
+
+    {% if result is defined %}
+    <div class="result-container">
+        <h1>{{ result }}</h1>
+    </div>
+    {% endif %}
+
+
+    <button id="btnStart"><i class="fas fa-camera"></i></button>
+    <br/>
+    <video id="video" autoplay></video>
+    <canvas id="canvas" style="display: none;"></canvas>
+
     <div class="row mt-2 mb-4">
         <div class="col mx-auto">
             <div class="input-group mt-1">
@@ -37,19 +50,6 @@
                     <option value="3">Авто 3</option>
                 </select>
             </div>
-
-
-            {% if result is defined %}
-            <div class="result-container">
-                <h1>{{ result }}</h1>
-            </div>
-            {% endif %}
-
-
-            <button id="btnStart"><i class="fas fa-camera"></i></button>
-            <br/>
-            <video id="video" autoplay></video>
-            <canvas id="canvas" style="display: none;"></canvas>
 
 
             <div class="input-group mt-1">
@@ -206,6 +206,8 @@
         video.style.display = 'none';
         canvas.style.display = 'none';
         btnStart.disabled = true;
+        // Refresh the page
+        location.reload();
       },
   error: function(xhr, status, error) {
     console.error('Ошибка при отправке фото:', error);
@@ -362,6 +364,7 @@
                 let valueString = date.getFullYear().toString();
                 valueString = valueString.concat('-', twoDigits(date.getMonth()), '-', twoDigits(date.getDate()), 'T', twoDigits(date.getHours()), ':', twoDigits(date.getMinutes()));
                 document.querySelectorAll('input[type="datetime-local"].now').forEach((item) => item.value = valueString);
+
 
 
     </script>

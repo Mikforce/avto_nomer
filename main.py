@@ -1,4 +1,3 @@
-# pip install matplotlib pytesseract opencv-python tesseract-ocr flask
 from flask import Flask, render_template, request, redirect, url_for, session
 import subprocess
 import matplotlib.pyplot as plt
