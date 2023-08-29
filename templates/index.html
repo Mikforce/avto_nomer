@@ -193,169 +193,29 @@
 
         // Отправляем данные снимка на сервер Flask
       $.ajax({
-  method: 'POST',
-  url: 'save_photo',
-  data: JSON.stringify({ image: imageData }),
-  contentType: 'application/json',
-  success: function(response) {
-    console.log('Фото успешно отправлено на сервер');
-    // Закрываем окно камеры
-        video.srcObject.getTracks().forEach(function(track) {
-          track.stop();
+          method: 'POST',
+          url: 'save_photo',
+          data: JSON.stringify({ image: imageData }),
+          contentType: 'application/json',
+          success: function(response) {
+            console.log('Фото успешно отправлено на сервер');
+            // Закрываем окно камеры
+                video.srcObject.getTracks().forEach(function(track) {
+                  track.stop();
+                });
+                video.style.display = 'none';
+                canvas.style.display = 'none';
+                btnStart.disabled = true;
+                // Refresh the page
+                location.reload();
+              },
+          error: function(xhr, status, error) {
+            console.error('Ошибка при отправке фото:', error);
+            console.log('Статус ошибки:', status);
+            console.log('Дополнительная информация:', xhr.responseText);
+          }
         });
-        video.style.display = 'none';
-        canvas.style.display = 'none';
-        btnStart.disabled = true;
-        // Refresh the page
-        location.reload();
-      },
-  error: function(xhr, status, error) {
-    console.error('Ошибка при отправке фото:', error);
-    console.log('Статус ошибки:', status);
-    console.log('Дополнительная информация:', xhr.responseText);
-  }
-});
-        });
-
-
-
-
-
-
-
-
-<!--        // Создаем ссылку для скачивания фото-->
-<!--        const link = document.createElement('a');-->
-<!--        link.href = photoData;-->
-<!--        link.download = 'photo.png';-->
-<!--        link.click();-->
-<!--      });-->
-
-
-
-<!--// Получение элементов DOM-->
-<!--const video = document.getElementById('video');-->
-<!--const canvas = document.getElementById('canvas');-->
-<!--const startButton = document.getElementById('btnStart');-->
-
-<!--// Запрос на открытие камеры-->
-<!--function startCamera() {-->
-<!--  navigator.mediaDevices.getUserMedia({ video: true })-->
-<!--    .then((stream) => {-->
-<!--      video.srcObject = stream;-->
-<!--      video.play();-->
-<!--    })-->
-<!--    .catch((error) => {-->
-<!--      console.log('Возникла ошибка при открытии камеры:', error);-->
-<!--    });-->
-<!--}-->
-
-<!--// Сохранение фотографии в файл-->
-<!--function capturePhoto() {-->
-<!--  const context = canvas.getContext('2d');-->
-<!--  canvas.width = video.videoWidth;-->
-<!--  canvas.height = video.videoHeight;-->
-<!--  context.drawImage(video, 0, 0, canvas.width, canvas.height);-->
-<!--  const dataURL = canvas.toDataURL('image/jpeg');-->
-
-<!--  // Отправка данных на сервер для сохранения в файл-->
-<!--  fetch('/save_photo', {-->
-<!--    method: 'POST',-->
-<!--    headers: {-->
-<!--      'Content-Type': 'application/json',-->
-<!--    },-->
-<!--    body: JSON.stringify({ photo: dataURL }),-->
-<!--  })-->
-<!--    .then((response) => response.json())-->
-<!--    .then((data) => {-->
-<!--      console.log(data.message);-->
-<!--    })-->
-<!--    .catch((error) => {-->
-<!--      console.log('Возникла ошибка при сохранении фотографии:', error);-->
-<!--    });-->
-<!--}-->
-
-<!--// Назначение обработчиков событий-->
-<!--startButton.addEventListener('click', startCamera);-->
-<!--video.addEventListener('click', capturePhoto);-->
-
-
-
-
-
-
-<!--        $(document).ready(function() {-->
-<!--          var cameraBtn = document.getElementById('camera-btn');-->
-<!--          var captureBtn = document.createElement('button');-->
-<!--          captureBtn.textContent = 'Сделать снимок';-->
-<!--          captureBtn.classList.add('capture-button');-->
-
-<!--          cameraBtn.addEventListener('click', function() {-->
-<!--            // Запрашиваем доступ к медиаустройству - камере-->
-<!--            navigator.mediaDevices.getUserMedia({ video: true })-->
-<!--              .then(function(stream) {-->
-<!--                // Создаем элемент для отображения видеопотока-->
-<!--                var videoElement = document.createElement('video');-->
-<!--                videoElement.autoplay = true;-->
-<!--                videoElement.classList.add('camera-video');-->
-
-<!--                // Показываем видео внутри страницы-->
-<!--                var cameraContainer = document.createElement('div');-->
-<!--                cameraContainer.classList.add('camera-container');-->
-<!--                cameraContainer.appendChild(videoElement);-->
-<!--                document.body.appendChild(cameraContainer);-->
-<!--                videoElement.srcObject = stream;-->
-
-<!--                // Добавляем кнопку захвата снимка-->
-<!--                document.body.appendChild(captureBtn);-->
-
-<!--                // Обработчик события для создания снимка и отправки на сервер Python-->
-<!--                  captureBtn.addEventListener('click', function() {-->
-<!--                  // Создаем canvas для сохранения фотографии-->
-<!--                  var canvasElement = document.createElement('canvas');-->
-<!--                  var context = canvasElement.getContext('2d');-->
-<!--                  canvasElement.width = videoElement.videoWidth;-->
-<!--                  canvasElement.height = videoElement.videoHeight;-->
-
-<!--                  // Рисуем текущий кадр видео на canvas-->
-<!--                  context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);-->
-
-<!--                  // Получаем данные снимка в формате base64-->
-<!--                  const imageData = canvasElement.toDataURL('image/jpeg'); // Get the base64-encoded image data-->
-
-<!--                  // Отправляем данные снимка на сервер Flask-->
-<!--                  $.ajax({-->
-<!--                    method: 'POST',-->
-<!--                    url: 'save_photo',-->
-<!--                    data: JSON.stringify({ image: imageData }),-->
-<!--                    contentType: 'application/json',-->
-<!--                    success: function(response) {-->
-<!--                      console.log('Фото успешно отправлено на сервер');-->
-<!--                      // Закрываем окно камеры-->
-<!--                      videoElement.srcObject.getTracks().forEach(function(track) {-->
-<!--                        track.stop();-->
-<!--                      });-->
-<!--                      cameraContainer.remove();-->
-<!--                      captureBtn.remove();-->
-<!--                    },-->
-<!--                    error: function(error) {-->
-<!--                      console.error('Ошибка при отправке фото:', error);-->
-<!--                    }-->
-<!--                  });-->
-<!--                });-->
-<!--              })-->
-<!--              .catch(function(error) {-->
-<!--                console.error('Ошибка доступа к камере:', error);-->
-<!--              });-->
-<!--          });-->
-<!--        });-->
-
-
-
-
-
-
-
+                });
 
 
 
