@@ -168,14 +168,42 @@
 
       // Обработчик клика на кнопке "Начать"
       btnStart.addEventListener('click', () => {
-        // Запрашиваем доступ к камере
-        navigator.mediaDevices.getUserMedia({ video: true })
+
+      // Получаем доступ ко всем доступным устройствам ввода
+  navigator.mediaDevices.enumerateDevices()
+    .then((devices) => {
+      // Фильтруем только устройства типа "videoinput"
+      const videoDevices = devices.filter((device) => device.kind === 'videoinput');
+
+      if (videoDevices.length > 0) {
+        let mainCamera;
+
+        // Проверяем, использует ли пользователь телефон
+        if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+          // Ищем заднюю камеру на телефоне
+          mainCamera = videoDevices.find((device) => device.label.toLowerCase().includes('back'));
+        }
+
+        // Если не найдена задняя камера, берем первое устройство
+        if (!mainCamera) {
+          mainCamera = videoDevices[0];
+        }
+
+        // Запрашиваем доступ только к основной камере
+        navigator.mediaDevices.getUserMedia({ video: { deviceId: { exact: mainCamera.deviceId } } })
           .then((stream) => {
             video.srcObject = stream;
           })
           .catch((error) => {
-            console.log('Ошибка при запросе доступа к камере:', error);
+            console.log('Ошибка при запросе доступа к основной камере:', error);
           });
+      } else {
+        console.log('Не найдено ни одной камеры');
+      }
+    })
+    .catch((error) => {
+      console.log('Ошибка при получении списка устройств:', error);
+    });
       });
 
       // Обработчик клика внутри видео для сохранения фото на компьютер
